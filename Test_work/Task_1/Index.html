@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<title>Length Converter</title>
+<body>
+
+    <p>
+        <h2>Length Converter</h2>
+        <label>Input Json* file</label>
+        <input id="distance" type="text"  size="50" value='{"distance":{"unit": "m", "value": 0.5}, "convert_to": "ft"}'>
+    <button id="convert">Convert</button>
+    </p>
+    <pre> {"distance": {"unit": "m", "value": 0.5}, "convert_to": "ft"}
+    </pre>
+    <br>
+
+    <h2 id="outputValue"></h2>
+    <br>
+    <p>
+    <h2>Library update JSON </h2>
+    <pre> lib.json в папке Task_1
+    </pre>
+    <label>Input Json* file</label>
+    <input type="file" accept=".json" id="upload">
+
+    </p>
+
+    <pre> {"unit": "ft", "MSM": 0.3048} // 1 ft measurement system to m: 0.3048 m
+    </pre>
+    <h3 id="libereryUpdate" ></h3>
+
+<script>
+    // стандартная библиотеке
+    let library = [{
+        "unit": "ft",
+        "MSM": 0.3048
+    },
+        {
+            "unit": "m",
+            "MSM": 1
+        },
+        {
+            "unit": "cm",
+            "MSM": 0.1
+        },
+        {
+            "unit": "in",
+            "MSM": 0.0254
+        }
+    ];
+    // подвязка кнопки и инпута
+        let convert=document.getElementById('convert');
+        outputValue
+    let con={a:1}
+    console.log('ttt',   convert );
+
+        // расчет по кнопке
+        convert.onclick = function () {
+            let distance= JSON.parse(document.getElementById('distance').value);
+            let value= distance.distance.value*                                         // Значениe
+                librarySearch(distance.distance.unit)/          // множитель из
+                librarySearch(distance.convert_to);                                    // множитель в
+
+
+            let roundedString = value.toFixed(2); // округление до 2 цифр
+            value = Number(roundedString);
+            // формируем JSON
+            let JSOut = JSON.stringify({unit:distance.convert_to, value:value})
+             //   JSON.stringify(`{"unit" :`+distance.convert_to+` "value":`+value+` }`);
+            document.getElementById("outputValue").innerHTML=`JSON: `+JSOut ;
+
+
+            //проверка данных
+             //console.log(distance);  //растояние из инпута
+            // console.log(library);    //библиотека
+            // console.log(librarySearch(distance.convert_to)); // множитель в
+            //console.log(librarySearch(distance.distance.unit)); // множитель из
+        };
+
+    //чтение   JSON
+    const upload = document.querySelector('#upload');
+    upload.addEventListener('change', function (e) {
+        try {
+            const upload = e.target.files[0];
+            const reader = new FileReader();
+            reader.addEventListener('load', (function (file) {
+                return function (e) {
+                    json = JSON.parse(e.target.result);
+                    const libereryUpdate = document.getElementById ("libereryUpdate");
+                    libereryUpdate.innerHTML=`Was added: `;
+                    json.forEach(function(item) {
+                        library.push(item)
+                        libereryUpdate.innerHTML+=' '+item.unit;
+                    });
+                               //кладем в нашу библиотеку
+                                         // выводим результат в консоль
+                                          //console.log(library);
+                }
+            })(upload));
+            reader.readAsText(upload);
+        }
+        catch (ex) {
+            console.log(ex);
+        }
+    });
+
+// Функция ищет в библиотеке по кулючу юнит и возвращает МСМ (множитель)
+    function librarySearch(valUnit){
+        let msm=0;
+        library.forEach(function(item) {
+            if (item.unit==valUnit) {
+                msm=item.MSM;
+               // console.log(item);
+            }
+        });
+        return msm;
+    }
+
+</script>
+
+</body>
+</html>
